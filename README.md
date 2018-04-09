@@ -1,8 +1,6 @@
-# Ansible Role: Passenger
+# Ansible Role: Passenger with ssl
 
 Forked from https://github.com/geerlingguy/ansible-role-passenger
-
-added ssl support for letsencrypt
 
 
 Installs Passenger (with Nginx) on RedHat/CentOS (soon) or Debian/Ubuntu linux servers.
@@ -14,10 +12,10 @@ ssl certificates already installed
 ## Role Variables
 
 
-enable_ssl: true
-hostname: mywebsite.com
-ssl_certificate_file: /etc/letsencrypt/live/{{hostname}}/cert.pem;
-ssl_certificate_key_file: /etc/letsencrypt/live/{{hostname}}/privkey.pem;
+    enable_ssl: true
+    hostname: mywebsite.com
+    ssl_certificate_file: /etc/letsencrypt/live/{{hostname}}/cert.pem;
+    ssl_certificate_key_file: /etc/letsencrypt/live/{{hostname}}/privkey.pem;
 
 
 
