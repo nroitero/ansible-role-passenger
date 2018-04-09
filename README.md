@@ -9,11 +9,10 @@ Installs Passenger (with Nginx) on RedHat/CentOS (soon) or Debian/Ubuntu linux s
 
 ## Requirements
 
-None.
+ssl certificates already installed
 
 ## Role Variables
 
-example after generating ssl certificates with letsencrypt
 
 enable_ssl: true
 hostname: mywebsite.com
