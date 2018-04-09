@@ -1,0 +1,46 @@
+
+  server {
+  {% if enable_ssl == "true"%}
+
+  listen 80;
+    return 301 https://$host$request_uri;
+  }
+  server {
+  listen 443 ssl default_server;
+  {% else %}
+  listen 80 default_server;
+
+  {% endif %}
+  server_name {{ passenger_server_name }};
+  passenger_enabled on;
+  passenger_app_env {{ passenger_app_env }};
+  root {{ passenger_app_root }};
+  {% if enable_ssl == "true"%}
+  proxy_set_header X-Forwarded-Proto https;
+  ssl_prefer_server_ciphers On;
+  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+  ssl_ciphers ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+3DES:!aNULL:!MD5:!DSS;
+  ssl_certificate    {{ssl_certificate_file}}
+  ssl_certificate_key  {{ssl_certificate_key_file}}
+  {% endif %}
+  location ~ "^/assets/.+-([0-9a-f]{32}|[0-9a-f]{64})\..+" {
+      error_page 490 = @static_asset;
+      error_page 491 = @dynamic_request;
+      recursive_error_pages on;
+      if (-f $request_filename) {
+          return 490;
+      }
+      if (!-f $request_filename) {
+          return 491;
+      }
+  }
+  location @static_asset {
+      gzip_static on;
+      expires max;
+      add_header Cache-Control public;
+      add_header ETag "";
+  }
+  location @dynamic_request {
+      passenger_enabled on;
+  }
+}
